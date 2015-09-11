@@ -9,6 +9,8 @@ class Game
 	char const	player1;
 	char const	player2;
 	int			current_player;
+	bool		is_finished;
+	int			winner_player;
 
 public :
 	Game();
@@ -18,7 +20,8 @@ public :
 	bool	is_winner();
 	void	congrats();
 	bool	exaequo();
-	bool	is_finished();
+	bool	check_finished();
+	bool	get_is_finished();
 };
 
 #endif

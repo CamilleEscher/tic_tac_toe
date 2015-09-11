@@ -7,7 +7,9 @@ Game::Game() :
 	round(1),
 	player1('O'),
 	player2('X'),
-	current_player(0)
+	current_player(0),
+	is_finished(false),
+	winner_player(0)
 {
 }
 
@@ -28,6 +30,10 @@ void Game::display()
 {
 	round_display(round);
 	board.display();
+	if(winner_player > 0)
+	{
+		Game::congrats();
+	}	
 }
 
 void Game::update()
@@ -56,6 +62,7 @@ void Game::update()
 		is_in_board = board.set_cell_value((pos - 1), c);
 	}
 	++round;
+	is_finished = check_finished();
 	current_player = (current_player + 1) % 2;
 }
 
@@ -74,15 +81,15 @@ bool Game::is_winner()
 	}
 	if(board.is_winner(c))
 	{
-		Game::congrats();
 		has_won = true;
+		winner_player = current_player + 1;
 	}
 	return has_won;
 }
 
 void Game::congrats()
 {
-	std::cout << "Player " << current_player + 1 << " win !" << std::endl;
+	std::cout << "Player " << winner_player << " win !" << std::endl;
 }
 
 bool Game::exaequo()
@@ -97,7 +104,7 @@ bool Game::exaequo()
 	return res;
 }
 
-bool Game::is_finished()
+bool Game::check_finished()
 {
 	bool finished = false;
 	if(is_winner() || exaequo())
@@ -105,4 +112,9 @@ bool Game::is_finished()
 		finished = true;
 	}
 	return finished;
+}
+
+bool Game::get_is_finished()
+{
+	return is_finished;
 }

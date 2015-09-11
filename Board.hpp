@@ -5,6 +5,7 @@ class Board
 {
 	char	board[9];
 	int		board_size;
+
 public :
 			Board();
 	
