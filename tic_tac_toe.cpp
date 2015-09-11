@@ -6,7 +6,7 @@ int main()
 	Game	game;
 
 	game.display();
-	while(!game.is_finished()) 
+	while(!game.get_is_finished()) 
 	{
 		game.update();
 		game.display();
