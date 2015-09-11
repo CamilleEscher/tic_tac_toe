@@ -4,14 +4,14 @@
 class Board
 {
 	char	board[9];
-
-	public :
-				Board();
-		void	display();
-		Board&	update(int pos, char c);
-		bool	is_winner(char c);
-		bool	is_full();
-		bool	is_space(int pos);
+	int		board_size;
+public :
+			Board();
+	
+	void	display() const;
+	bool	set_cell_value(int pos, char c);
+	bool	is_winner(char c) const;
+	bool	is_full() const;
 };
 
 #endif

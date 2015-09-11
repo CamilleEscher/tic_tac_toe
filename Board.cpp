@@ -4,60 +4,58 @@
 
 static void print_line(int char_nb, char c);
 
-Board::Board()
+Board::Board() :
+	board_size(9)
 {
-	int i = -1;
-
-	while(++i < 9)
+	for(unsigned int i = 0; i < board_size; ++i)
 	{
-		this->board[i] = ' ';
+		board[i] = ' ';
 	}	
 }
 
-void Board::display()
+void Board::display() const
 {
-	int 		i = -1;
-	int 		j = -1;
-	std::string to_display = " ";
+	std::string to_display;
 
-	print_line(9, '-');
-	while(++i < 3)
+	to_display.push_back(' ');
+	print_line(board_size, '-');
+	for(unsigned int i = 0; i < 3; ++i)
 	{
-		while(++j < 3)
+		for(unsigned int j = 0; j < 3; ++j)
 		{
-			to_display += "|";
+			to_display.push_back('|');
 			to_display.push_back(board[i * 3 + j]);
 		}
-		to_display += "|";
+		to_display.push_back('|');
 		std::cout << to_display << std::endl;
-		print_line(9, '-');
-		j = -1;
+		print_line(board_size, '-');
 		to_display = " ";
 	}
 }
 
+//fonction membre TODO
 static void print_line(int char_nb, char c)
 {
-	int			i = -1;
-	std::string	line = "";
+	std::string	line;
 
-	while(++i < char_nb)
+	for(unsigned int i = 0; i < char_nb; ++i)
 	{
 		line += c;
 	}
 	std::cout << line << std::endl;
 }
 
-Board& Board::update(int pos, char c)
+bool Board::set_cell_value(int pos, char c)
 {
-	if(pos > -1 && pos < 9)
+	if(pos > -1 && pos < board_size)
 	{
 		if(board[pos] == ' ')
 		{
 			board[pos] = c;
+			return true;
 		}
 	}
-	return *this;
+	return false;
 }
 
 static bool check_line(char c, char const* board);
@@ -66,7 +64,7 @@ static bool check_column(char c, char const* board);
 
 static bool check_diag(char c, char const* board);
 
-bool Board::is_winner(char c)
+bool Board::is_winner(char c) const
 {
 	bool has_won = false;
 
@@ -87,15 +85,12 @@ bool Board::is_winner(char c)
 
 static bool check_line(char c, char const* board)
 {
-	int		i = -1;
-	int		j = -1;
 	int		count = 0;
-	bool	has_won = false;
 
-	while(++i < 3)
+	for(unsigned int i = 0; i < 3; ++i)
 	{
 		count = 0;
-		while(++j < 3)
+		for(unsigned int j = 0; j < 3; ++j)
 		{
 			if(board[i * 3 + j] == c)
 			{
@@ -106,33 +101,27 @@ static bool check_line(char c, char const* board)
 				break;
 			}
 		}
-		j = -1;
 		if(count == 3)
 		{
-			has_won = true;
-			break;
+			return true;
 		}
 	}
-	return has_won;
+	return false;
 }
 
 static bool check_column(char c, char const* board)
 {
-	int		i = -1;
-	bool	has_won = false;
-
-	while(++i < 3)
+	for(unsigned int i = 0; i < 3; ++i)
 	{
 		if(board[i] == c)
 		{
 			if(board[i + 3] == c && board[i + 6] == c)
 			{
-				has_won = true;
-				break;
+				return true;
 			}
 		}
 	}
-	return has_won;
+	return false;
 }
 
 static bool check_diag(char c, char const* board)
@@ -150,38 +139,14 @@ static bool check_diag(char c, char const* board)
 	return has_won;
 }
 
-bool Board::is_full()
+bool Board::is_full() const
 {
-	int		i = -1;
-	bool	isfull = false;
-
-	while(++i < 9)
+	for(unsigned int i = 0; i < board_size; ++i)
 	{
 		if(board[i] == ' ')
 		{
-			break;
+			return false;
 		}
 	}
-	if(i == 9)
-	{
-		isfull = true;
-	}
-	return isfull;
-}
-
-bool Board::is_space(int pos)
-{
-	bool isspace = true;
-	if(pos > 0 && pos < 10)
-	{
-		if(board[pos - 1] != ' ')
-		{
-			isspace = false;
-		}
-	}
-	else
-	{
-		isspace = false;
-	}
-	return isspace;
+	return true;
 }
