@@ -4,19 +4,21 @@
 
 class Game
 {
-	Board	board;
-	int		round;
-	char	player1;
-	char	player2;
+	Board		board;
+	int			round;
+	char const	player1;
+	char const	player2;
+	int			current_player;
 
-	public :
-		Game();
+public :
+	Game();
 
-		void	display(int player);
-		Game&	update(int player);
-		bool	is_winner(int player);
-		void	congrats(int player);
-		bool	exaequo(int player);
+	void	display();
+	void	update();
+	bool	is_winner();
+	void	congrats();
+	bool	exaequo();
+	bool	is_finished();
 };
 
 #endif

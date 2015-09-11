@@ -4,14 +4,12 @@
 int main()
 {
 	Game	game;
-	int		player = 0;
 
-	game.display(player);
-	while(!game.is_winner((player + 1) % 2) && !game.exaequo((player + 1) % 2))
+	game.display();
+	while(!game.is_finished()) 
 	{
-		game.update(player);
-		game.display(player);
-		player = ++player % 2;
+		game.update();
+		game.display();
 	}
 	return 0;
 }
