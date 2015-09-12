@@ -4,10 +4,11 @@
 #include <algorithm>
 #include <iterator>
 #include <cmath>
+#include <vector>
 
-Board::Board()
+Board::Board(std::size_t size)
 {
-	board.fill(' ');
+	board = std::vector<char>(size, ' ');
 }
 
 void Board::display() const
@@ -161,6 +162,11 @@ bool Board::check_diag(char c) const
 		return true;
 	}
 	return false;	
+}
+
+unsigned int Board::get_size()
+{
+	return board.size();
 }
 
 bool Board::is_full() const

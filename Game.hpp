@@ -4,7 +4,7 @@
 
 class Game
 {
-	Board		board;
+	Board*		board;
 	int			round;
 	char const	player1;
 	char const	player2;
@@ -13,8 +13,10 @@ class Game
 	int			winner_player;
 
 public :
-	Game();
+			Game();
 
+	void	destroy();
+	void	set_options();
 	void	display();
 	void	update();
 	bool	is_winner();
