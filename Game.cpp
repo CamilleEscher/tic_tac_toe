@@ -7,6 +7,8 @@ Game::Game() :
 	round(1),
 	player1('O'),
 	player2('X'),
+	//player1_name("Player 1");TODO
+	//player2_name("Player 2"); TODO
 	current_player(0),
 	is_finished(false),
 	winner_player(0)
@@ -33,14 +35,18 @@ void Game::display()
 	if(winner_player > 0)
 	{
 		Game::congrats();
-	}	
+	}
+	else if(winner_player == 0 && is_finished)
+	{
+		std::cout << "Ex-aequo ! " << std::endl;
+	}
 }
 
 void Game::update()
 {
-	int			pos = 0;
-	char		c;
-	bool		is_in_board = false;
+	unsigned int	pos = 0;
+	char			c;
+	bool			is_in_board = false;
 	
 	if(current_player == 0)
 	{
@@ -94,14 +100,7 @@ void Game::congrats()
 
 bool Game::exaequo()
 {
-	bool res;
-
-	res = board.is_full();
-	if(res && !(is_winner()))
-	{
-		std::cout << "Ex-aequo ! " << std::endl;
-	}
-	return res;
+	return board.is_full();
 }
 
 bool Game::check_finished()

@@ -1,53 +1,46 @@
 #include "Board.hpp"
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <iterator>
+#include <cmath>
 
-static void print_line(int char_nb, char c);
-
-Board::Board() :
-	board_size(9)
+Board::Board()
 {
-	for(unsigned int i = 0; i < board_size; ++i)
-	{
-		board[i] = ' ';
-	}	
+	board.fill(' ');
 }
 
 void Board::display() const
 {
-	std::string to_display;
+	std::string		to_display;
+	unsigned int	size = (int)std::round(std::sqrt(board.size()));
 
 	to_display.push_back(' ');
-	print_line(board_size, '-');
-	for(unsigned int i = 0; i < 3; ++i)
+	print_line('-');
+	for(unsigned int i = 0; i < size; ++i)
 	{
-		for(unsigned int j = 0; j < 3; ++j)
+		for(unsigned int j = 0; j < size; ++j)
 		{
 			to_display.push_back('|');
-			to_display.push_back(board[i * 3 + j]);
+			to_display.push_back(board[i * size + j]);
 		}
 		to_display.push_back('|');
 		std::cout << to_display << std::endl;
-		print_line(board_size, '-');
+		print_line('-');
 		to_display = " ";
 	}
 }
 
-//fonction membre TODO
-static void print_line(int char_nb, char c)
+void Board::print_line(char c) const
 {
-	std::string	line;
-
-	for(unsigned int i = 0; i < char_nb; ++i)
-	{
-		line += c;
-	}
+	std::size_t	size = std::round(std::sqrt(board.size())) * 2 + 3;
+	std::string	line(size, c);
 	std::cout << line << std::endl;
 }
 
-bool Board::set_cell_value(int pos, char c)
+bool Board::set_cell_value(unsigned int pos, char c)
 {
-	if(pos > -1 && pos < board_size)
+	if(pos < board.size())
 	{
 		if(board[pos] == ' ')
 		{
@@ -58,41 +51,36 @@ bool Board::set_cell_value(int pos, char c)
 	return false;
 }
 
-static bool check_line(char c, char const* board);
-
-static bool check_column(char c, char const* board);
-
-static bool check_diag(char c, char const* board);
-
 bool Board::is_winner(char c) const
 {
 	bool has_won = false;
 
-	if(check_line(c, board))
+	if(check_line(c))
 	{
 		has_won = true;
 	}
-	else if(check_column(c, board))
+	else if(check_column(c))
 	{
 		has_won = true;
 	}
-	else if(check_diag(c, board))
+	else if(check_diag(c))
 	{
 		has_won = true;
 	}
 	return has_won;
 }
 
-static bool check_line(char c, char const* board)
+bool Board::check_line(char c) const
 {
-	int		count = 0;
+	unsigned int	count = 0;
+	unsigned int	size = (int)std::round(std::sqrt(board.size()));
 
-	for(unsigned int i = 0; i < 3; ++i)
+	for(unsigned int i = 0; i < size; ++i)
 	{
 		count = 0;
-		for(unsigned int j = 0; j < 3; ++j)
+		for(unsigned int j = 0; j < size; ++j)
 		{
-			if(board[i * 3 + j] == c)
+			if(board[i * size + j] == c)
 			{
 				++count;
 			}
@@ -101,7 +89,7 @@ static bool check_line(char c, char const* board)
 				break;
 			}
 		}
-		if(count == 3)
+		if(count == size)
 		{
 			return true;
 		}
@@ -109,44 +97,78 @@ static bool check_line(char c, char const* board)
 	return false;
 }
 
-static bool check_column(char c, char const* board)
+bool Board::check_column(char c) const
 {
-	for(unsigned int i = 0; i < 3; ++i)
+	unsigned int	size = (int)std::round(std::sqrt(board.size()));
+	unsigned int	count = 0;
+
+	for(unsigned int i = 0; i < size; ++i)
 	{
-		if(board[i] == c)
+		count = 0;
+		for(unsigned int j = 0; j < size; ++j)
 		{
-			if(board[i + 3] == c && board[i + 6] == c)
+			if(board[i + j * size] == c)
 			{
-				return true;
+				++count;
 			}
+			else
+			{
+				break;
+			}
+		}
+		if(count == size)
+		{
+			return true;
 		}
 	}
 	return false;
 }
 
-static bool check_diag(char c, char const* board)
+bool Board::check_diag(char c) const
 {
-	bool has_won = false;
+	unsigned int	size = (int)std::round(std::sqrt(board.size()));
+	unsigned int	count = 0;
 
-	if(board[0] == c && board[4] == c && board[8] == c)
+	for(unsigned int i = 0; i < size; ++i)
 	{
-		has_won = true;
+		if(board[i * (size + 1)] == c)
+		{
+			++count;
+		}
+		else
+		{
+			break;
+		}
 	}
-	else if(board[2] == c && board[4] == c && board[6] == c)
+	if(count == size)
 	{
-		has_won = true;
+		return true;
 	}
-	return has_won;
+	count = 0;
+	for(unsigned int i = size; i > 0; --i)
+	{
+		if(board[i * (size - 1)] == c)
+		{
+			++count;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if(count == size)
+	{
+		return true;
+	}
+	return false;	
 }
 
 bool Board::is_full() const
 {
-	for(unsigned int i = 0; i < board_size; ++i)
+	auto res = std::find(std::begin(board), std::end(board), ' ');
+	if(res == std::end(board))
 	{
-		if(board[i] == ' ')
-		{
-			return false;
-		}
+		return true;
 	}
-	return true;
+	return false;
 }
