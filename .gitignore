@@ -1,5 +1,5 @@
 *.o
 *.a
 *.out
-game
+tic_tac_toe
 
